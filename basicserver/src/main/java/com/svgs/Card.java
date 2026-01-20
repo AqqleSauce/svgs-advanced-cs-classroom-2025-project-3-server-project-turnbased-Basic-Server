@@ -3,11 +3,18 @@ package com.svgs;
 public class Card {
     
 private int value;
-private String suit;
+private int suit;
 
-public Card(int val, String suits){
+public Card(int val, int suits){
     value=val;
     suit=suits;
+    //suits are 0-3
+    // 0 = spades
+    // 1 = clubs
+    // 2 = hearts
+    // 3 = diamonds
     }
+
+   
 
 }

@@ -1,6 +1,7 @@
 package com.svgs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.google.gson.Gson;
 
@@ -14,9 +15,11 @@ public class Main {
     static int playerTurn = 0;
     static ArrayList<Player> playerList;
     static Gson gson = new Gson();
+    static ArrayList<Card> cardDeck = new ArrayList<Card>();
     public static void main(String[] args) {
+        ShuffleUpNDealEm(3);
+        port(2121);
         disableCORS();
-    port(2121);
     
     post("/joinGame",(req,res)->{
         String playern = req.body();
@@ -33,7 +36,7 @@ public class Main {
 
     post("/start",(req,res)->{
         gameStarted=true;
-        shuffleUpNDealEm(playerList.size());
+        ShuffleUpNDealEm(playerList.size());
         //this will take the list of players and shuffle some cards and deal them. I haven't written the code for that just yet.
             
         return "";
@@ -42,8 +45,16 @@ public class Main {
 
     }
 
-    static public void shuffleUpNDealEm(int playerCount){
-        // TODO: Write this
+    static public void ShuffleUpNDealEm(int playerCount){
+        //add cards, 52
+        //suits are 0-3, 0=spades, 1=clubs, 2=hearts, 3=diamonds
+        //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however.
+        for(int i = 0; i<4; i++){
+            for(int j =0; j<13; j++){
+                cardDeck.add(new Card(i,j));
+            }
+        }
+       
     }
 
     public static void disableCORS() {
