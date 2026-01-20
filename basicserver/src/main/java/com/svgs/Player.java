@@ -8,5 +8,8 @@ public class Player {
     
     public Player(String nam){
         name = nam;
+        cards = new ArrayList<>();
     }
+
+    
 }

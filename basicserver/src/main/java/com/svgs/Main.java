@@ -17,14 +17,20 @@ public class Main {
     static Gson gson = new Gson();
     static ArrayList<Card> cardDeck = new ArrayList<Card>();
     public static void main(String[] args) {
-        ShuffleUpNDealEm(3);
-        port(2121);
         disableCORS();
     
     post("/joinGame",(req,res)->{
         String playern = req.body();
         Player p = new Player(playern);
-        playerList.add(p);
+        boolean playerExists = false;
+        for(int i = 0; i<playerList.size(); i++){
+            if(playerList.get(i).name == playern){
+                playerExists = true;
+            }
+        }
+        if(!playerExists){
+            playerList.add(p);
+        }
         JoinGamesReturnObject joingame = new JoinGamesReturnObject();
         joingame.gameState = gameStarted;
         joingame.players = playerList;
@@ -48,11 +54,16 @@ public class Main {
     static public void ShuffleUpNDealEm(int playerCount){
         //add cards, 52
         //suits are 0-3, 0=spades, 1=clubs, 2=hearts, 3=diamonds
-        //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however.
+        //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however, and ace sometimes counts as 11.
         for(int i = 0; i<4; i++){
             for(int j =0; j<13; j++){
                 cardDeck.add(new Card(i,j));
             }
+        }
+        Collections.shuffle(cardDeck);
+        int h = 0;
+        for(int l = 0; l < playerList.size(); l++){
+            // write the actual card dealing cards
         }
        
     }
