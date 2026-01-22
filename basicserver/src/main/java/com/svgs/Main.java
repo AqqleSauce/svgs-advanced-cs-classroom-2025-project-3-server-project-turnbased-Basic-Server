@@ -17,13 +17,14 @@ public class Main {
     static ArrayList<Card> cardDeck = new ArrayList<Card>();
     public static void main(String[] args) {
         disableCORS();
+        
     
     post("/joinGame",(req,res)->{
         String playern = req.body();
         Player p = new Player(playern);
         boolean playerExists = false;
         for(int i = 0; i<playerList.size(); i++){
-            if(playerList.get(i).name == playern){
+            if(playerList.get(i).name.equals(playern)){
                 playerExists = true;
             }
         }
@@ -42,9 +43,18 @@ public class Main {
     post("/start",(req,res)->{
         gameStarted=true;
         ShuffleUpNDealEm(playerList.size());
-        //this will take the list of players and shuffle some cards and deal them. I haven't written the code for that just yet.
-            
-        return "";
+        //this will take the list of players and shuffle some cards and deal them. 
+        StartObjectReturnObject starterObject = new StartObjectReturnObject(playerList.size()+1);
+        for(int i = 0; i<playerList.size(); i++){
+            starterObject.playerReturnList[i] = playerList.get(i);
+        }
+        // adding the dealer at the very end, might not work idk.
+        starterObject.playerReturnList[starterObject.playerReturnList.length - 1] = new Player(1);
+        starterObject.playerReturnList[starterObject.playerReturnList.length - 1].cards.add(cardDeck.remove(0));
+        starterObject.playerReturnList[starterObject.playerReturnList.length - 1].cards.add(cardDeck.remove(0));
+        //it returns an array of people and their cards.
+        //the dealer is the last one in the list.
+        return gson.toJson(starterObject);
     });
         
 
@@ -60,9 +70,12 @@ public class Main {
             }
         }
         Collections.shuffle(cardDeck);
-        int h = 0;
         for(int l = 0; l < playerList.size(); l++){
-            
+            playerList.get(l).cards.add(cardDeck.remove(0));
+            playerList.get(l).cards.add(cardDeck.remove(0));
+            //do it twice to deal two cards 
+            System.out.println(playerList.get(l).cards);
+            //just a little test to see if its even doing things.
         }
        
     }

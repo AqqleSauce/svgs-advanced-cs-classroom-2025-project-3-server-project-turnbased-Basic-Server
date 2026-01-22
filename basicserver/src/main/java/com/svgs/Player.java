@@ -11,5 +11,9 @@ public class Player {
         cards = new ArrayList<>();
     }
 
-    
+    public Player(int dil){
+    // this one is only for the dealer
+        name = "Dealer";
+        cards = new ArrayList<>();
+    }
 }
