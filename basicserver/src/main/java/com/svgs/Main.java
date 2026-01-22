@@ -7,13 +7,12 @@ import com.google.gson.Gson;
 
 import static spark.Spark.before;
 import static spark.Spark.options;
-import static spark.Spark.port;
 import static spark.Spark.post;
 
 public class Main {
     static boolean gameStarted = false;
     static int playerTurn = 0;
-    static ArrayList<Player> playerList;
+    static ArrayList<Player> playerList = new ArrayList<>();
     static Gson gson = new Gson();
     static ArrayList<Card> cardDeck = new ArrayList<Card>();
     public static void main(String[] args) {
@@ -63,7 +62,7 @@ public class Main {
         Collections.shuffle(cardDeck);
         int h = 0;
         for(int l = 0; l < playerList.size(); l++){
-            // write the actual card dealing cards
+            
         }
        
     }
