@@ -56,9 +56,14 @@ public class Main {
         //the dealer is the last one in the list.
         return gson.toJson(starterObject);
     });
-        
+        //the endpoint, "/turns" is done whenever it's a new person's turn. then they can decide Wether to hit or stand and all that."
+    post("/turns",(req,res)->{
 
-    }
+        return "";
+    });
+
+}
+    
 
     static public void ShuffleUpNDealEm(int playerCount){
         //add cards, 52
@@ -66,7 +71,7 @@ public class Main {
         //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however, and ace sometimes counts as 11.
         for(int i = 0; i<4; i++){
             for(int j =0; j<13; j++){
-                cardDeck.add(new Card(i,j));
+                cardDeck.add(new Card(j,i));
             }
         }
         Collections.shuffle(cardDeck);
@@ -77,7 +82,7 @@ public class Main {
             System.out.println(playerList.get(l).cards);
             //just a little test to see if its even doing things.
         }
-       
+    
     }
 
     public static void disableCORS() {

@@ -15,6 +15,9 @@ public Card(int val, int suits){
     // 3 = diamonds
     }
 
+    public String toString(){
+        return suit + " of " + value;
+    }
    
 
 }
