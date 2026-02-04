@@ -56,19 +56,32 @@ public class Main {
         //the dealer is the last one in the list.
         return gson.toJson(starterObject);
     });
-        //the endpoint, "/turns" is done whenever it's a new person's turn. then they can decide Wether to hit or stand and all that."
-    post("/turns",(req,res)->{
 
-        return "";
+       //the variable "playerTurn" tells who's turn it is according to the array list of players. 
+       // at the end of either of these moves, it adds 1 to playerTurn.
+    post("/stand",(req,res)->{
+        playerTurn++;
+    return gson.toJson(playerList.get(playerTurn-1));
     });
 
+    post("/hit",(req,res)->{
+        //ace card logic
+        HaveTheyLost(playerTurn);
+    return "";
+    });
 }
     
+    public static void HaveTheyLost(int playerTurn){
+        ArrayList<Card> hand = playerList.get(playerTurn).cards;
+        for(Card x : hand){
+            
+        }
+    }
 
-    static public void ShuffleUpNDealEm(int playerCount){
+    public static void ShuffleUpNDealEm(int playerCount){
         //add cards, 52
         //suits are 0-3, 0=spades, 1=clubs, 2=hearts, 3=diamonds
-        //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however, and ace sometimes counts as 11.
+        //from 1-13, in ascending order, ace, 2-10, jack, king, queen. face cards all count as 10 in blackjack, however, and ace counts as 11 or 1.
         for(int i = 0; i<4; i++){
             for(int j =0; j<13; j++){
                 cardDeck.add(new Card(j,i));
