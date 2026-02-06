@@ -19,7 +19,6 @@ public class Main {
     static ArrayList<Card> cardDeck = new ArrayList<Card>();
 
     public static void main(String[] args) {
-        ShuffleUpNDealEm(12);
         System.out.println(cardDeck);
         disableCORS();
 
@@ -45,20 +44,18 @@ public class Main {
         });
 
         post("/start", (req, res) -> {
-            gameStarted = true;
+            if(gameStarted==false){
             ShuffleUpNDealEm(playerList.size());
             //this will take the list of players and shuffle some cards and deal them. 
-            StartObjectReturnObject starterObject = new StartObjectReturnObject(playerList.size() + 1);
-            for (int i = 0; i < playerList.size(); i++) {
-                starterObject.playerReturnList[i] = playerList.get(i);
-            }
-            // adding the dealer at the very end, might not work idk.
-            starterObject.playerReturnList[starterObject.playerReturnList.length - 1] = new Player(1);
-            starterObject.playerReturnList[starterObject.playerReturnList.length - 1].cards.add(cardDeck.remove(0));
-            starterObject.playerReturnList[starterObject.playerReturnList.length - 1].cards.add(cardDeck.remove(0));
+            Player diller = new Player(1);
+            diller.cards.add(cardDeck.remove(0));
+            diller.cards.add(cardDeck.remove(0));
+            playerList.add(diller);
             //it returns an array of people and their cards.
             //the dealer is the last one in the list.
-            return gson.toJson(starterObject);
+            gameStarted = true;
+            }
+            return gson.toJson(playerList);
         });
 
         get("/whoseTurn", (req, res) -> {
@@ -82,18 +79,34 @@ public class Main {
         });
     }
 
-    public static void lost(int playerTurn) {
+    //method to determine if the player has lost. If they have, it returns true.
+    public static boolean lost(int playerTurn) {
         ArrayList<Card> hand = playerList.get(playerTurn).cards;
-        int handValueSansAce = 0;
+        int handValueWAce = 0;
         for (Card x : hand) {
-            if(!(x.value==0)){
-                if(x.value>10)
-                handValueSansAce += x.value;
-            }
+                if(x.value<10 && !(x.value==0)){
+                handValueWAce += (x.value+1);
+                }
+                else if (x.value>=10){
+                    handValueWAce += 10;
+                }
+                else if (x.value == 0){
+                    if(handValueWAce<=10){
+                        handValueWAce+=11;
+                    }
+                    else if(handValueWAce>10){
+                        handValueWAce+=1;
+                    }
+                }
+                if(handValueWAce>21){
+                return true;
+                }
         }
+        return false;
     }
 
     public static void ShuffleUpNDealEm(int playerCount) {
+        cardDeck.clear();
         //add cards, 52
         //suits are 0-3, 0=spades, 1=clubs, 2=hearts, 3=diamonds
         //from 0-12, in ascending order, ace, 1-9, jack, king, queen. face cards all count as 10 in blackjack, however, and ace counts as 11 or 1.

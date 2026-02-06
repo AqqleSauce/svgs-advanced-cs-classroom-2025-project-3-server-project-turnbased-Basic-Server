@@ -17,7 +17,7 @@ public Card(int val, int suits){
     }
 
     public String toString(){
-        return suit + " of " + value;
+        return value + " of " + suit;
     }
    
 
