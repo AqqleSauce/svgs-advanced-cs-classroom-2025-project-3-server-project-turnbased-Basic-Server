@@ -19,7 +19,6 @@ public class Main {
     static ArrayList<Card> cardDeck = new ArrayList<Card>();
 
     public static void main(String[] args) {
-        System.out.println(cardDeck);
         disableCORS();
 
         post("/joinGame", (req, res) -> {
@@ -69,15 +68,58 @@ public class Main {
         // at the end of either of these moves, it adds 1 to playerTurn.
         post("/stand", (req, res) -> {
             playerTurn++;
+            if(playerTurn==playerList.size()-1){
+                doDealerThing();
+            }
             return gson.toJson(playerList.get(playerTurn - 1));
         });
 
         post("/hit", (req, res) -> {
             //ace card logic
-            lost(playerTurn);
-            return "";
+            playerList.get(playerTurn).cards.add(cardDeck.remove(0));
+            if(lost(playerTurn)){
+                playerList.get(playerTurn).haveLost = true;
+                playerTurn++;
+            }
+            if(playerTurn==playerList.size()-1){
+                doDealerThing();
+                return gson.toJson(playerList);
+            }
+            return(gson.toJson(playerList.get(playerTurn)));
         });
     }
+
+    public static void doDealerThing(){
+        ArrayList<Card> Dhand = playerList.get(playerTurn).cards;
+        int dealerCards = 0;
+        for (Card x : Dhand) {
+                if(x.value<10 && !(x.value==0)){
+                dealerCards += (x.value+1);
+                }
+                else if (x.value>=10){
+                    dealerCards+= 10;
+                }
+                else if (x.value == 0){
+                    if(dealerCards<=10){
+                        dealerCards+=11;
+                    }
+                    else if(dealerCards>10){
+                        dealerCards+=1;
+                    }
+                }
+            }
+            if(dealerCards<=17){
+                playerList.get(playerList.size()-1).cards.add(cardDeck.remove(0));
+                doDealerThing();
+                        
+                    }
+        for(int i = 0; i<(playerList.size()-2); i++){
+            if(lost(i)){
+                playerList.get(i).haveLost=true;
+            }
+        }
+
+        }
 
     //method to determine if the player has lost. If they have, it returns true.
     public static boolean lost(int playerTurn) {
